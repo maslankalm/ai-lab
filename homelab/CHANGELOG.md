@@ -4,6 +4,29 @@ Reverse-chronological record of every change to the homelab: cluster updates, ne
 
 ---
 
+## 2026-05-19
+
+### Hermes promoted as the primary AI Lab control plane
+
+- **What** — Decided to consolidate daily agent operations around Hermes and retire OpenClaw from the active path. OpenClaw remains useful as historical context, but Hermes is now the main operating surface because it is faster to iterate on and less fragile during upgrades.
+- **Why** — The lab needs one dependable control plane for Discord-first operations, Kanban-style coordination, scheduled work, and local tooling access. Reducing the active agent surface also keeps upgrades and debugging simpler.
+
+### Hermes upgraded for SuperGrok OAuth and frontier-model fallback
+
+- **What** — Upgraded Hermes to the latest available release and configured SuperGrok / xAI OAuth support. SuperGrok is now the second frontier-model backend, with GPT-5.5 kept as the primary/default path and fallback behavior available if OpenAI has issues.
+- **Why** — This gives the lab two subscription-backed frontier model families instead of depending on a single provider, while avoiding separate API-key plumbing for the SuperGrok path.
+
+### Hermes proxy added as an OpenAI-compatible SuperGrok endpoint
+
+- **What** — Added a dedicated `hermes-proxy` container to the Hermes Compose stack and exposed a local OpenAI-compatible `/v1` endpoint backed by the SuperGrok OAuth session. Health checks confirmed the proxy was authenticated and serving xAI model metadata.
+- **Why** — Local tools can now point at a subscription-backed OpenAI-compatible endpoint instead of each app needing its own xAI integration. This keeps the proxy as normal Compose-managed infrastructure rather than an ad hoc process inside another service.
+
+### Qwen3.6-35B-A3B running on RTX 2080 Ti via llama.cpp
+
+- **What** — Brought up `Qwen3.6-35B-A3B` `UD-Q4_K_M` on the `rtx-i7` / RTX 2080 Ti rig with CUDA-backed `llama.cpp`, 8K context, automatic GPU-layer fitting, Flash Attention, q8 KV cache, and hybrid RAM + partial GPU offload.
+- **Why** — The 11 GB RTX 2080 Ti cannot hold the whole 35B-class GGUF in VRAM, but the Windows Docker Desktop / WSL2 host has enough system RAM for a useful hybrid local-model playground.
+- **Result** — The model loaded near the safe VRAM edge at roughly 10.27 GiB used / 0.75 GiB free. Warm requests measured about **17.6–22.5 generated tokens/s**, with prompt evaluation ranging from roughly **49 tok/s** on short prompts to **~265 tok/s** on a medium cached prompt. Vision projector support stays deferred until the text path is stable.
+
 ## 2026-05-15
 
 ### Kubernetes Manifest Reviewer public demo deployed
