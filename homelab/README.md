@@ -61,7 +61,7 @@ flowchart LR
 
 - **rtx-i7** — primary private GPU inference rig with RTX 2080 Ti, rebuilt as a Windows 11 + Docker Desktop GPU host.
 - **rtx-i5** — fallback private GPU inference rig with GTX 1080, also rebuilt as a Windows 11 + Docker Desktop GPU host.
-- **Local `llama.cpp` / legacy Ollama** — self-hosted model runtime on the GPU rigs. The RTX 2080 Ti path is being shifted to CUDA `llama.cpp` for larger GGUF models such as Qwen3.6-35B-A3B with partial GPU offload, while Ollama remains useful for smaller/demo models and compatibility until the router path is fully migrated.
+- **Local `llama.cpp` / legacy Ollama** — self-hosted model runtime on the GPU rigs. The RTX 2080 Ti path now uses CUDA `llama.cpp` for larger GGUF models such as Qwen3.6-35B-A3B with partial GPU offload, including an MTP-enabled Q4 profile for higher decode throughput. Ollama remains useful for smaller/demo models and compatibility until the router path is fully migrated.
 
 ## Lab Apps
 

@@ -4,6 +4,16 @@ Reverse-chronological record of every change to the homelab: cluster updates, ne
 
 ---
 
+## 2026-05-23
+
+### Qwen3.6 35B MTP profile validated on RTX 2080 Ti
+
+- Benchmarked the MTP-capable Qwen3.6 35B `UD-Q4_K_XL` GGUF on the `rtx-i7` / RTX 2080 Ti rig with CUDA `llama.cpp`, 8K context, Flash Attention, q8 KV cache, and partial GPU offload.
+- MTP was tested by only adding `--spec-type draft-mtp --spec-draft-n-max 2`. Decode throughput improved from about **21.5 tok/s** to **25.5 tok/s**; wall-completion throughput improved from about **17.8 tok/s** to **19.9 tok/s**.
+- Draft-token acceptance was roughly **78%**. VRAM use increased by about **500 MB**, leaving the 11 GB card close to full. The MTP-enabled server stayed running on the private rig network after a successful health check.
+
+---
+
 ## 2026-05-19
 
 ### Hermes promoted as the primary AI Lab control plane
