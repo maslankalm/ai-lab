@@ -4,6 +4,27 @@ Reverse-chronological record of every change to the homelab: cluster updates, ne
 
 ---
 
+## 2026-06-01
+
+### vLLM runtime prepared for standalone local inference
+
+- Added vLLM as a local GPU-serving option on the `rtx-i7` path, with `vllm/vllm-openai` images present for OpenAI-compatible inference experiments outside the OCI Kubernetes app stack.
+- Tested the current `ministral-3:8b` story against the RTX 2080 Ti hardware boundary: the official vLLM checkpoint path is blocked by FP8 / compute capability requirements on the Turing card, while GGUF/Ollama remains the working local path for that model.
+- Restored the local Ollama fallback surface on `rtx-i7` by pulling `ministral-3:8b` and adding a plain `ministral` alias; both names now answer through the OpenAI-compatible Ollama endpoint.
+
+---
+
+## 2026-05-25
+
+### PrismML Ternary Bonsai 8B tested on RTX 2080 Ti
+
+- Built the PrismML `llama.cpp` fork from the `prism` branch inside a CUDA `12.4.1` development container on the `rtx-i7` / RTX 2080 Ti rig, limiting CUDA architecture to `sm_75` for the Turing card.
+- Tested `prism-ml/Ternary-Bonsai-8B-gguf` using `Ternary-Bonsai-8B-Q2_0.gguf` against `Qwen/Qwen3-8B-GGUF` using `Qwen3-8B-Q4_K_M.gguf`, with identical `llama-bench` settings: full GPU offload, `pp512`, `tg128`, and three repeats.
+- Measured PrismML build `747eb36`: Bonsai loaded as a much smaller ~2.03 GiB model and produced about **1340 tok/s** prompt processing and **22.6 tok/s** generation; Qwen3 Q4_K_M was ~4.68 GiB and measured about **1078 tok/s** prompt processing and **30.7 tok/s** generation, with higher variance.
+- Qualitative testing positioned Bonsai as a lightweight side model for simple infra explanations, retry-code snippets, sizing arithmetic, and Docker/NVIDIA triage rather than a primary coding or agentic model.
+
+---
+
 ## 2026-05-23
 
 ### Qwen3.6 35B MTP profile validated on RTX 2080 Ti

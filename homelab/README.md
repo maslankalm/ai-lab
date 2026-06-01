@@ -4,7 +4,7 @@ Living documentation of my homelab: AI control planes, GitOps infrastructure, pr
 
 ## Snapshot
 
-Hermes is the primary AI Lab control plane for Discord-first operation, scheduled work, Kanban-style coordination, and local tooling access. OpenClaw has been retired from the active path after repeated upgrade fragility, while the lab keeps multiple model backends available: GPT-5.5 as the default frontier path, SuperGrok / xAI OAuth as the second frontier path, and local `llama.cpp` for private GPU experiments.
+Hermes is the primary AI Lab control plane for Discord-first operation, scheduled work, Kanban-style coordination, and local tooling access. OpenClaw has been retired from the active path after repeated upgrade fragility, while the lab keeps multiple model backends available: GPT-5.5 as the default frontier path, SuperGrok / xAI OAuth as the second frontier path, and local vLLM / `llama.cpp` runtimes for private GPU experiments.
 
 Tailscale is the private backbone. Full lab operation happens from a MacBook over Tailscale, while mobile access stays Discord-first for talking to the agents. This keeps deep administration on a proper workstation while still making the agent layer reachable while traveling.
 
@@ -17,7 +17,7 @@ flowchart LR
     MAC["MacBook<br/>CLI / browser via Tailscale"]
     MOBILE["Mobile<br/>Discord control"]
     CP["Hermes<br/>AI Lab control plane"]
-    MODELS["Model backends<br/>GPT-5.5 / SuperGrok<br/>local llama.cpp"]
+    MODELS["Model backends<br/>GPT-5.5 / SuperGrok<br/>local vLLM / llama.cpp"]
     TAIL["Tailscale<br/>private backbone"]
     CLOUD["OCI Always Free<br/>Kubernetes GitOps"]
     REVIEWER["Public demo<br/>K8s Manifest Reviewer"]
@@ -61,7 +61,7 @@ flowchart LR
 
 - **rtx-i7** — primary private GPU inference rig with RTX 2080 Ti, rebuilt as a Windows 11 + Docker Desktop GPU host.
 - **rtx-i5** — fallback private GPU inference rig with GTX 1080, also rebuilt as a Windows 11 + Docker Desktop GPU host.
-- **Local `llama.cpp` / legacy Ollama** — self-hosted model runtime on the GPU rigs. The RTX 2080 Ti path now uses CUDA `llama.cpp` for larger GGUF models such as Qwen3.6-35B-A3B with partial GPU offload, including an MTP-enabled Q4 profile for higher decode throughput. Ollama remains useful for smaller/demo models and compatibility until the router path is fully migrated.
+- **Local vLLM / `llama.cpp` / legacy Ollama** — self-hosted model runtimes on the GPU rigs. vLLM is now enabled as a general local inference path, while the RTX 2080 Ti path also uses CUDA `llama.cpp` for larger GGUF models such as Qwen3.6-35B-A3B with partial GPU offload, including an MTP-enabled Q4 profile for higher decode throughput. Ollama remains useful for smaller/demo models and compatibility until the router path is fully migrated.
 
 ## Lab Apps
 
