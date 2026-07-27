@@ -8,7 +8,7 @@ The repo is built around real systems rather than isolated demos: an OCI Always 
 
 ### [Try the Kubernetes Manifest Reviewer →](https://k8s-manifest-reviewer.maslanka.io)
 
-Paste a small Kubernetes manifest and get an AI-assisted security/reliability review. The public app runs on the OCI Kubernetes cluster, calls the in-cluster [`ollama-router`](https://github.com/maslankalm/ollama-router), and routes `ministral-3:8b` inference to a local RTX 2080 Ti with Ollama Cloud free-tier fallback.
+Paste a small Kubernetes manifest and get an AI-assisted security/reliability review. The public app runs on the OCI Kubernetes cluster, calls the in-cluster [`ollama-router`](https://github.com/maslankalm/ollama-router), and routes `gpt-oss:20b` inference to a local RTX 2080 Ti with Ollama Cloud free-tier fallback.
 
 ## Repo Map
 
@@ -48,4 +48,4 @@ The human part is still the important part: architecture, requirements, tradeoff
 | [homelab](homelab/) | Current AI operations architecture, Tailscale-connected Windows GPU rigs, Rigwarden wake/status control, and the public changelog showing how the lab evolved. |
 | [k8s-oci-cluster](k8s-oci-cluster/) | Terraform-managed OCI Always Free Kubernetes cluster with nginx ingress, external-dns, cert-manager, Argo CD GitOps, internal `ollama-router`, and the public manifest reviewer app. |
 | [ollama-router](https://github.com/maslankalm/ollama-router) | Standalone OpenAI-compatible FastAPI router for Ollama backends. This repo carries the OCI/Argo CD deployment manifests under `k8s-oci-cluster/apps/ollama-router`; the app code and GHCR image live in the separate public repository. |
-| [k8s-manifest-reviewer](https://github.com/maslankalm/k8s-manifest-reviewer) | Public demo app that reviews Kubernetes YAML with `ministral-3:8b`, local RTX 2080 Ti inference, and Ollama Cloud free-tier fallback through `ollama-router`. Deployment manifests live under `k8s-oci-cluster/apps/k8s-manifest-reviewer`. |
+| [k8s-manifest-reviewer](https://github.com/maslankalm/k8s-manifest-reviewer) | Public demo app that reviews Kubernetes YAML with `gpt-oss:20b`, local RTX 2080 Ti inference, and Ollama Cloud free-tier fallback through `ollama-router`. Deployment manifests live under `k8s-oci-cluster/apps/k8s-manifest-reviewer`. |

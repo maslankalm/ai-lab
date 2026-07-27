@@ -7,7 +7,7 @@ The public GitOps manifests intentionally do **not** include backend endpoints, 
 - `ollama-router-config` with key `config.yaml`
 - `ollama-router-secrets` with keys `TS_AUTHKEY` and `OLLAMA_CLOUD_API_KEY`
 
-The Deployment runs a Tailscale sidecar in kernel/TUN mode and advertises `tag:k8s`. Tailnet ACLs must allow `tag:k8s` to reach inference rigs on `11434`. In the live demo path, the router serves `ministral-3:8b` from the local RTX 2080 Ti backend first and uses Ollama Cloud free tier as fallback.
+The Deployment runs a Tailscale sidecar in kernel/TUN mode and advertises `tag:k8s`. Tailnet ACLs must allow `tag:k8s` to reach inference rigs on `11434`. In the live demo path, the router serves `gpt-oss:20b` from the local RTX 2080 Ti backend first and uses Ollama Cloud free tier as fallback.
 
 Related docs: [`../README.md`](../README.md) lists all GitOps apps, and [`../../../homelab/README.md`](../../../homelab/README.md) explains the Tailnet/local GPU side of the setup.
 

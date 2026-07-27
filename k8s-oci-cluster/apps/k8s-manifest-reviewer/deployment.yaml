@@ -27,7 +27,7 @@ spec:
             - name: OLLAMA_ROUTER_URL
               value: http://ollama-router.ollama-router.svc.cluster.local:8080
             - name: OLLAMA_MODEL
-              value: ministral-3:8b
+              value: gpt-oss:20b
             - name: REQUEST_TIMEOUT_SECONDS
               value: "90"
             - name: LLM_REVIEW_ATTEMPTS

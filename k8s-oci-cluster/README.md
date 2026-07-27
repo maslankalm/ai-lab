@@ -26,7 +26,7 @@ Inspired by [nce/oci-free-cloud-k8s](https://github.com/nce/oci-free-cloud-k8s),
 - **TLS:** cert-manager with Let's Encrypt certificates via Cloudflare DNS-01 challenge — enables Cloudflare Full (Strict) TLS mode for end-to-end encryption
 - **GitOps:** Argo CD for continuous deployment from Git
 
-The application layer is intentionally small but now runs real workloads: an internal `ollama-router` inference gateway and the public [Kubernetes Manifest Reviewer](https://k8s-manifest-reviewer.maslanka.io) demo. The reviewer uses `ministral-3:8b` through the router, preferring local RTX 2080 Ti inference and falling back to Ollama Cloud free tier. The platform keeps the GitOps path lightweight and avoids monitoring-stack leftovers until they are actually needed.
+The application layer is intentionally small but now runs real workloads: an internal `ollama-router` inference gateway and the public [Kubernetes Manifest Reviewer](https://k8s-manifest-reviewer.maslanka.io) demo. The reviewer uses `gpt-oss:20b` through the router, preferring local RTX 2080 Ti inference and falling back to Ollama Cloud free tier. The platform keeps the GitOps path lightweight and avoids monitoring-stack leftovers until they are actually needed.
 
 See [Prerequisites](docs/prerequisites.md) before running Terraform.
 
