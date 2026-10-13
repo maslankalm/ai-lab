@@ -1,5 +1,8 @@
 # GitOps Apps
 
+> [!NOTE]
+> **Retired 2026-10** together with the OCI cluster; these manifests are kept as reference.
+
 Argo CD watches this directory through the app-of-apps configuration in `platform/argocd.tf`.
 
 ## Prepared apps

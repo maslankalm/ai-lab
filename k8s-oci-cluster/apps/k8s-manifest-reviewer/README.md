@@ -1,8 +1,12 @@
 # Kubernetes Manifest Reviewer GitOps app
 
+> [!NOTE]
+> **Retired 2026-10.** The demo went offline when the OCI cluster was torn down. The app
+> code stays in [`maslankalm/k8s-manifest-reviewer`](https://github.com/maslankalm/k8s-manifest-reviewer); these manifests are kept as reference.
+
 Public demo deployment for [`ghcr.io/maslankalm/k8s-manifest-reviewer:main`](https://github.com/maslankalm/k8s-manifest-reviewer).
 
-Live app: <https://k8s-manifest-reviewer.maslanka.io>
+Was live at `k8s-manifest-reviewer.maslanka.io` until 2026-10.
 
 The app reviews small Kubernetes YAML manifests with `gpt-oss:20b` and calls the in-cluster `ollama-router` service:
 

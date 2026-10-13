@@ -1,0 +1,14 @@
+# Created by setup.sh -- never committed: model weights, runtime binaries, the API key.
+**/models/
+llama-cpp-prism/bin/
+llama-cpp-prism/downloads/
+**/secrets/
+
+# runtime output
+**/logs/
+*.pid
+*.part
+__pycache__/
+
+# third-party speech (YouTube audio, transcripts, captions); WER scores stay in whisper/results/
+whisper/transcripts/

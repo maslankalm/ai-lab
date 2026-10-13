@@ -2,13 +2,7 @@
 
 A working repository for AI-assisted engineering across DevOps, Kubernetes, homelab automation, and LLM-powered tools.
 
-The repo is built around real systems rather than isolated demos: an OCI Always Free GitOps cluster, a Tailscale-connected homelab with peer agent control planes, local GPU inference, and a live LLM-backed Kubernetes review app. The [homelab/](homelab/) directory is the meta view: current architecture plus a public-safe changelog of infrastructure changes.
-
-## Live Demo
-
-### [Try the Kubernetes Manifest Reviewer →](https://k8s-manifest-reviewer.maslanka.io)
-
-Paste a small Kubernetes manifest and get an AI-assisted security/reliability review. The public app runs on the OCI Kubernetes cluster, calls the in-cluster [`ollama-router`](https://github.com/maslankalm/ollama-router), and routes `gpt-oss:20b` inference to a local RTX 2080 Ti with Ollama Cloud free-tier fallback.
+The repo is built around real systems rather than isolated demos: a Tailscale-connected homelab with Hermes as its agent control plane, local GPU inference on Windows rigs, local Apple Silicon inference for 27B-class models and speech-to-text, and a Terraform/GitOps Kubernetes setup that ran a public LLM-backed demo until it was retired. The [homelab/](homelab/) directory is the meta view: current architecture plus a public-safe changelog of infrastructure changes.
 
 ## Repo Map
 
@@ -16,36 +10,43 @@ Paste a small Kubernetes manifest and get an AI-assisted security/reliability re
 flowchart LR
     REPO["ai-lab"]
     HOMELAB["homelab<br/>AI operations + local compute"]
-    K8S["k8s-oci-cluster<br/>OCI Always Free GitOps"]
-    REVIEWER["k8s-manifest-reviewer<br/>live Kubernetes YAML review"]
-    ROUTER["ollama-router<br/>LLM backend routing"]
-    CLOUDLLM["Ollama Cloud<br/>fallback inference"]
-
-    AGENTS["OpenClaw + Hermes<br/>agent control planes"]
+    LOCALAI["local-ai<br/>Apple Silicon inference"]
+    MACLLM["llama.cpp router<br/>Bonsai 2 / Qwen3.8 / Bielik"]
+    STT["whisper.cpp<br/>speech-to-text"]
+    AGENTS["Hermes<br/>agent control plane"]
     LAB["Tailnet inference<br/>RTX 2080 Ti primary"]
+    K8S["k8s-oci-cluster<br/>OCI Always Free GitOps<br/>(retired)"]
+    REVIEWER["k8s-manifest-reviewer<br/>Kubernetes YAML review<br/>(retired)"]
+    ROUTER["ollama-router<br/>LLM backend routing<br/>(retired)"]
 
     REPO --> HOMELAB
-    REPO --> K8S
-    K8S --> REVIEWER
-    K8S --> ROUTER
+    REPO --> LOCALAI
+    REPO -.-> K8S
     HOMELAB --> AGENTS
     HOMELAB --> LAB
-    REVIEWER --> ROUTER
-    ROUTER --> LAB
-    ROUTER --> CLOUDLLM
+    LOCALAI --> MACLLM
+    LOCALAI --> STT
+    K8S -.-> REVIEWER
+    K8S -.-> ROUTER
+    REVIEWER -.-> ROUTER
+    ROUTER -.-> LAB
+
+    classDef retired stroke-dasharray: 5 5,color:#888
+    class K8S,REVIEWER,ROUTER retired
 ```
 
 ## AI-assisted engineering
 
-This repo started with Claude Code, then moved to OpenAI Codex with GPT-5.5 after practical comparison in daily use. Codex is now the main coding and operations assistant. Claude remains available through `opus-expert`, exposed through an OpenAI-compatible REST API and connected to OpenClaw as a model for critical review, second opinions, and deeper critique.
+This repo started with Claude Code, then moved to OpenAI Codex after practical comparison in daily use. Codex is now the main coding and operations assistant, and `gpt-5.6-sol` through Codex OAuth is the default model behind Hermes. The earlier `opus-expert` advisory endpoint (Claude behind an OpenAI-compatible API, wired into OpenClaw) was retired together with OpenClaw in 2026-10.
 
 The human part is still the important part: architecture, requirements, tradeoffs, operations, and review. AI makes the implementation loop faster, but the work is grounded in infrastructure that actually runs.
 
 ## Start Here
 
-| Area | What to inspect |
-|---------|-------------|
-| [homelab](homelab/) | Current AI operations architecture, Tailscale-connected Windows GPU rigs, Rigwarden wake/status control, and the public changelog showing how the lab evolved. |
-| [k8s-oci-cluster](k8s-oci-cluster/) | Terraform-managed OCI Always Free Kubernetes cluster with nginx ingress, external-dns, cert-manager, Argo CD GitOps, internal `ollama-router`, and the public manifest reviewer app. |
-| [ollama-router](https://github.com/maslankalm/ollama-router) | Standalone OpenAI-compatible FastAPI router for Ollama backends. This repo carries the OCI/Argo CD deployment manifests under `k8s-oci-cluster/apps/ollama-router`; the app code and GHCR image live in the separate public repository. |
-| [k8s-manifest-reviewer](https://github.com/maslankalm/k8s-manifest-reviewer) | Public demo app that reviews Kubernetes YAML with `gpt-oss:20b`, local RTX 2080 Ti inference, and Ollama Cloud free-tier fallback through `ollama-router`. Deployment manifests live under `k8s-oci-cluster/apps/k8s-manifest-reviewer`. |
+| Area | Status | What to inspect |
+|---------|--------|-------------|
+| [homelab](homelab/) | Active | Current AI operations architecture, Tailscale-connected Windows GPU rigs, Rigwarden wake/status control under Hermes, and the public changelog showing how the lab evolved. |
+| [local-ai](local-ai/) | Active | Local inference on a MacBook Pro (M5 Pro, 48 GB): PrismML's `llama.cpp` fork in router mode serving Ternary Bonsai 2 27B, Qwen3.8 27B and Bielik 11B behind one OpenAI-compatible endpoint, plus whisper.cpp transcription. Pinned, hash-checked setup from Homebrew; interleaved speed benchmarks, a sandboxed 15-task quality eval, and WER scoring against human captions. |
+| [k8s-oci-cluster](k8s-oci-cluster/) | Retired 2026-10 | Terraform-managed OCI Always Free Kubernetes cluster with nginx ingress, external-dns, cert-manager and Argo CD GitOps. The cluster is torn down; the config is kept as a working reference that can rebuild it. |
+| [ollama-router](https://github.com/maslankalm/ollama-router) | Retired 2026-10 | Standalone OpenAI-compatible FastAPI router for Ollama backends, which ran in-cluster with a Tailscale sidecar to reach the local GPU rigs. App code and GHCR image live in the separate public repository; deployment manifests stay under `k8s-oci-cluster/apps/ollama-router`. |
+| [k8s-manifest-reviewer](https://github.com/maslankalm/k8s-manifest-reviewer) | Retired 2026-10 | Former public demo that reviewed Kubernetes YAML with `gpt-oss:20b` on a local RTX 2080 Ti through `ollama-router`, with Ollama Cloud free-tier fallback. Offline since the cluster was retired; manifests stay under `k8s-oci-cluster/apps/k8s-manifest-reviewer`. |

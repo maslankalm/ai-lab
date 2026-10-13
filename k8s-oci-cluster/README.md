@@ -1,5 +1,10 @@
 # Kubernetes on OCI Always Free
 
+> [!NOTE]
+> **Retired 2026-10.** The OCI cluster has been torn down and the public demo is offline.
+> This directory is kept as working reference configuration: the Terraform and Argo CD
+> setup below can still bring up the same Always Free cluster.
+
 Terraform-managed Kubernetes platform built around Oracle Cloud's Always Free tier. The goal is to keep a real GitOps cluster online at near-zero cost while still using production-shaped building blocks: managed Kubernetes, ingress, DNS automation, TLS, and Argo CD.
 
 The Terraform code is reusable: with an OCI account, Cloudflare zone, and the documented variables, another operator can use this directory to bring up their own Always Free Kubernetes cluster.

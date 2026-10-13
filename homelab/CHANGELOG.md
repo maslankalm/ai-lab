@@ -4,6 +4,54 @@ Reverse-chronological record of every change to the homelab: cluster updates, ne
 
 ---
 
+## 2026-10
+
+### OCI cluster and public demo retired
+
+- **What** — Tore down the OCI Always Free Kubernetes cluster. The public Kubernetes Manifest Reviewer demo and the in-cluster `ollama-router` gateway went offline with it.
+- **Kept** — The Terraform and Argo CD configuration stays in [`../k8s-oci-cluster/`](../k8s-oci-cluster/) as a working reference that can rebuild the same cluster; the app code stays in its own public repositories.
+
+### Agent stack consolidated on Hermes
+
+- **What** — Retired OpenClaw, the `opus-expert` Claude advisory endpoint wired into it, SearXNG, and the Hermes proxy for SuperGrok / xAI OAuth. Hermes now runs on `gpt-5.6-sol` through Codex OAuth.
+- **Why** — Completes the 2026-05-19 move to Hermes as the single control plane: one agent surface and one default model path.
+
+### Rigwarden moved to the HP node
+
+- **What** — Moved Rigwarden (GPU rig wake/status control) from the Raspberry Pi controller to the HP node, where Hermes drives it directly.
+
+### Vidscribe replaced by whisper.cpp
+
+- **What** — Retired the custom Vidscribe transcript service in favour of open-source whisper.cpp with Whisper large-v3-turbo and Silero VAD on the MacBook ([`../local-ai/whisper/`](../local-ai/whisper/)).
+- **Why** — Less complex to run and maintain than a custom service, and measured better than YouTube's own auto-captions on English talks.
+
+---
+
+## 2026-09-25
+
+### Local speech-to-text with whisper.cpp on the MacBook
+
+- **What** — Added whisper.cpp (Homebrew build, Metal) with Whisper `large-v3-turbo` and Silero VAD, pinned and hash-checked, behind a one-command `transcribe.sh` for YouTube URLs and local files. Details in [`../local-ai/whisper/`](../local-ai/whisper/).
+- **Why** — Transcripts for videos without captions, in English and Polish, without sending audio to a cloud API; the output feeds straight into the local LLMs.
+- **Result** — **33–46x real time** (86 min of audio in 2.7 min). Scored against human YouTube captions, English WER was **1.4% / 1.7%**, better than YouTube's own auto-captions (3.2% / 2.3%). VAD removed Whisper's invented intro credits; the full `large-v3` model was slower *and* hallucinated more, so it was dropped.
+
+### Quality eval: Ternary Bonsai 2 27B matches Qwen3.8 27B
+
+- **What** — Built a 15-task English eval (reasoning, sandboxed code, JSON extraction, tool calls, instruction following, ~60K-token retrieval, a rubric-scored explainer) with code-computed ground truths; model-written code runs only in a network-less Docker sandbox. Two seeds per model, identical sampling.
+- **Result** — **Bonsai 30/30, Qwen 29/30**, no truncated or looping answers, with Bonsai taking about **half the time per task**. Both scored near 100%, so the set can't separate them; multi-step agentic tool use remains untested. Report in [`../local-ai/llama-cpp-prism/`](../local-ai/llama-cpp-prism/).
+
+---
+
+## 2026-09-24
+
+### Ternary Bonsai 2 27B on Apple Silicon via a llama.cpp router
+
+- **What** — Set up PrismML's `llama.cpp` fork (pinned prebuilt release) in router mode on the MacBook Pro M5 Pro: one localhost OpenAI-compatible endpoint serving Ternary Bonsai 2 27B, Qwen3.8 27B with vision, and the Polish Bielik 11B, one model resident at a time with idle sleep. Follows the Bonsai 8B test on the RTX 2080 Ti.
+- **Why** — 48 GB of unified memory holds a whole 27B model plus a 262K-token context on the GPU, which the 11 GB RTX 2080 Ti can't; the ternary model needs the fork's custom kernels.
+- **Result** — At 262K context, Bonsai `PQ2_0` decoded **1.66–1.71x faster** than Qwen3.8 `UD-Q4_K_XL` on the same engine (~23 vs ~13.5 tok/s) in **16.6 vs 25.3 GiB**; prefill was unchanged (compute-bound). Interleaved rounds cancelled ~10% thermal drift. Rejected with numbers: MTP speculative decoding (1.10x) and PrismML's MLX build (0.87x). Details in [`../local-ai/`](../local-ai/).
+
+---
+
 ## 2026-06-01
 
 ### vLLM runtime prepared for standalone local inference
